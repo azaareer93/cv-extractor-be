@@ -10,7 +10,6 @@ from spire.doc import Document
 from .serializers import DocumentUploadSerializer
 from django.conf import settings
 from pdfminer.high_level import extract_text as extract_pdf_text
-from docx import Document as DocxDocument
 import json
 
 OPENAI_API_KEY = settings.OPENAI_API_KEY
