@@ -47,11 +47,11 @@ class DocumentUploadView(APIView):
 
             Personal Information:
             - Name
-            - Gender
+            - Gender (assume gener from name if you can)
             - Age
 
             Education (should be an array of objects):
-            - Academic level (e.g., Bachelor's Degree)
+            - Academic Level (should be in the format of Degree, Major, Minor. e.g., Bachelor, Computer Science, Software Engineering)
             - Institution (e.g., University of Dubai)
             - GPA/Grade (e.g., 3.9 GPA)
             - Start date – End date
@@ -94,9 +94,12 @@ class DocumentUploadView(APIView):
                 try:
                     json_str = extracted_info.split("```json", 1)[1].rsplit("```", 1)[0]
                     extracted_data = json.loads(json_str)
-                except Exception as e:
-                    extracted_data = {"error": f"Failed to parse AI response. \n\n {e} \n\n {extracted_info}"}
-                    return Response(extracted_data, status=status.HTTP_400_BAD_REQUEST)
+                except IndexError:
+                    try:
+                        extracted_data = json.loads(extracted_info)
+                    except Exception as e:
+                        extracted_data = {"error": f"Failed to parse AI response. \n\n {e} \n\n {extracted_info}"}
+                        return Response(extracted_data, status=status.HTTP_400_BAD_REQUEST)
 
                 return Response(extracted_data, status=status.HTTP_200_OK)
 
